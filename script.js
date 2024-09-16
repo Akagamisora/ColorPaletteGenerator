@@ -75,8 +75,9 @@ function generateColors() {
     paletteText.style.color = triadic[1].hex();
     generatorText.style.color = triadic[2].hex();
 
-    // ランダム生成ボタンの背景色を補色に設定
+    // ランダム生成ボタンとカラーパレットを保存ボタンの背景色を補色に設定
     document.getElementById('randomButton').style.backgroundColor = complementary.hex();
+    document.getElementById('saveImageButton').style.backgroundColor = complementary.hex();
 
     // 結果を表示
     let schemes = document.getElementById('colorSchemes');
@@ -143,4 +144,24 @@ function copyToClipboard(text) {
     tempInput.select();
     document.execCommand('copy');
     document.body.removeChild(tempInput);
+}
+
+
+// Twitter共有ボタンの処理
+document.getElementById('twitterButton').addEventListener('click', function() {
+    shareOnTwitter();
+});
+
+// Twitter共有の関数
+function shareOnTwitter() {
+    const baseColor = document.getElementById('hexColor').value;
+
+    // 投稿するテキスト
+    const tweetText = `ベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
+
+    // Twitterの共有URLを生成
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+    // 新しいタブでTwitterの共有ページを開く
+    window.open(twitterUrl, '_blank');
 }

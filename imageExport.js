@@ -74,6 +74,9 @@ function savePaletteAsImage() {
     const complementary = baseColor.set('hsl.h', '+180');
     drawColorInfo(complementary, xPosition + xColorInfo, yPosition + 28);
 
+    // ランダム生成ボタンの背景色を補色に設定
+    document.getElementById('randomButton').style.backgroundColor = complementary.hex();
+
     // 類似配色
     const analogous = [
         baseColor,
