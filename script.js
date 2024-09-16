@@ -189,7 +189,7 @@ document.getElementById('twitterButton').addEventListener('click', async functio
 
         if (imageUrl) {
             // Twitter投稿用のテキストとリンクを生成
-            const tweetText = `ベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\n${imageUrl}\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
+            const tweetText = `【カラーパレットジェネレーター】\nベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\n生成したカラーパレットの画像はここから確認できるよ👀\n${imageUrl}\n\n⬇️新たにカラーパレットを生成する⬇️\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
 
             // Twitterの共有URLを生成
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
