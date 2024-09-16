@@ -73,11 +73,14 @@ li {
     border-radius: 40px;
 }
 
-button {
-    background-color: #5046e5;
+#randomButton {
+    background-color: var(--complementary-color);  /* 補色が動的に適用される */
     border-radius: 8px;
     color: white;
     border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 button:hover {

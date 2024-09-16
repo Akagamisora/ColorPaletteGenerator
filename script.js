@@ -84,6 +84,9 @@ function generateColors() {
     addColorScheme(schemes, 'トライアド配色', triadic[0], triadic[1], triadic[2]);
     addColorScheme(schemes, '分裂補色配色', splitComplementary[0], splitComplementary[1], splitComplementary[2]);
     addColorScheme(schemes, 'テトラード配色', tetradic[0], tetradic[1], tetradic[2], tetradic[3]);
+
+    // ランダム生成ボタンの背景色を補色に設定
+    document.getElementById('randomButton').style.backgroundColor = complementary.hex();
 }
 
 // 配色スキームを追加する関数
