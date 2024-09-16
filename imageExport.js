@@ -13,15 +13,18 @@ function savePaletteAsImage() {
     canvas.width = width;
     canvas.height = height;
 
+    // 一時的にページに追加
+    document.body.appendChild(canvas);  // キャンバスを一時的にDOMに追加
+
     const xSpace10 = 10;
     const xSpace40 = 40;
     const ySpace20 = 20;
     const ySpace40 = 40;
-    
+
     // 背景の設定
     ctx.fillStyle = '#1f2937';
     ctx.fillRect(0, 0, width, height);
-    
+
     // 見出しの描画
     ctx.font = '48px Arial';
     ctx.fillStyle = '#FFFFFF';
@@ -68,7 +71,6 @@ function savePaletteAsImage() {
     ctx.font = '24px Arial';
     const baseColor = chroma(document.getElementById('hexColor').value);
     drawColorInfo(baseColor, xPosition, yPosition + 28);
-    
 
     // 補色
     const complementary = baseColor.set('hsl.h', '+180');
@@ -125,10 +127,17 @@ function savePaletteAsImage() {
     ctx.textAlign = "center"
     ctx.fillText('Made by Sora Akagami', width / 2, height - 50);
 
-    // 画像として保存
+    console.log("Canvasが正常に作成され、描画されました。");  // デバッグ用
+
+    // 画像として保存 (ページに保存する機能はそのまま)
     const link = document.createElement('a');
     const baseColorHex = baseColor.hex().replace('#', '');
     link.download = `basecolor_${baseColorHex}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
+
+    // ページに追加されたキャンバスを削除
+    setTimeout(() => {
+        canvas.remove();
+    }, 1000); // 画像を保存した後に1秒後に削除
 }

@@ -52,19 +52,5 @@
     <script src="script.js"></script>
     <script src="imageExport.js"></script>
 
-    <!-- クエリパラメータ処理のスクリプト -->
-    <script>
-        // ページ読み込み時にクエリパラメータをチェックしてベースカラーを設定
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const baseColor = urlParams.get('baseColor');
-            
-            if (baseColor) {
-                document.getElementById('baseColor').value = baseColor;
-                document.getElementById('hexColor').value = baseColor;
-                generateColors();  // パレットを生成
-            }
-        });
-    </script>
 </body>
 </html>

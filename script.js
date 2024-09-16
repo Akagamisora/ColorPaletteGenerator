@@ -146,22 +146,70 @@ function copyToClipboard(text) {
     document.body.removeChild(tempInput);
 }
 
+// Imgur APIを使って画像をアップロードする関数
+async function uploadImageToImgur(imageBlob) {
+    const clientId = '57734f8f4ce7189';  // ここに取得したImgurのクライアントIDを入力
+    const formData = new FormData();
+    formData.append('image', imageBlob);
 
-// Twitter共有ボタンの処理
-document.getElementById('twitterButton').addEventListener('click', function() {
-    shareOnTwitter();
-});
-
-// Twitter共有の関数
-function shareOnTwitter() {
-    const baseColor = document.getElementById('hexColor').value;
-
-    // 投稿するテキスト
-    const tweetText = `ベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
-
-    // Twitterの共有URLを生成
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-
-    // 新しいタブでTwitterの共有ページを開く
-    window.open(twitterUrl, '_blank');
+    try {
+        const response = await fetch('https://api.imgur.com/3/image', {
+            method: 'POST',
+            headers: {
+                Authorization: `Client-ID ${clientId}`
+            },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            return data.data.link;  // アップロードされた画像のURLを返す
+        } else {
+            throw new Error('Imgurへのアップロードに失敗しました');
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }
+
+// Twitter共有ボタンのクリックイベント
+document.getElementById('twitterButton').addEventListener('click', async function() {
+    // カラーパレットの画像を生成
+    savePaletteAsImage();  // imageExport.js で定義されている関数を呼び出し
+
+    // キャンバス要素を取得
+    const canvas = document.querySelector('canvas');  // 生成されたカラーパレットのキャンバス
+
+    // canvasが存在しない場合のエラーハンドリング
+    if (!canvas) {
+        alert('カラーパレットがまだ生成されていません。画像を生成してください。');
+        return;
+    }
+
+    console.log("Canvasが正常に取得されました。");  // デバッグ用
+
+    // キャンバスをBlobに変換してImgurにアップロード
+    canvas.toBlob(async function(blob) {
+        if (!blob) {
+            alert('キャンバスから画像を生成できませんでした。');
+            return;
+        }
+
+        console.log("Blobが正常に生成されました。", blob);  // デバッグ用
+
+        const imageUrl = await uploadImageToImgur(blob);
+
+        if (imageUrl) {
+            // Twitter投稿用のテキストとリンクを生成
+            const tweetText = `ベースカラー「${document.getElementById('hexColor').value}」を元にカラーパレットを生成しました。\n\n${imageUrl}\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/\n\n#カラーパレットジェネレーター`;
+
+            // Twitterの共有URLを生成
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+            // 新しいタブでTwitterの共有ページを開く
+            window.open(twitterUrl, '_blank');
+        } else {
+            alert('画像のアップロードに失敗しました。');
+        }
+    });
+});
