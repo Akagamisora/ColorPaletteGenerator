@@ -175,21 +175,7 @@ async function uploadImageToImgur(imageBlob) {
 // Twitter共有ボタンのクリックイベント
 document.getElementById('twitterButton').addEventListener('click', async function() {
     // カラーパレットの画像を生成
-    savePaletteAsImage();  // imageExport.js で定義されている関数を呼び出し
-
-    // キャンバス要素を取得
-    const canvas = document.querySelector('canvas');  // 生成されたカラーパレットのキャンバス
-
-    // canvasが存在しない場合のエラーハンドリング
-    if (!canvas) {
-        alert('カラーパレットがまだ生成されていません。画像を生成してください。');
-        return;
-    }
-
-    console.log("Canvasが正常に取得されました。");  // デバッグ用
-
-    // キャンバスをBlobに変換してImgurにアップロード
-    canvas.toBlob(async function(blob) {
+    createPaletteCanvas(async function(blob) {
         if (!blob) {
             alert('キャンバスから画像を生成できませんでした。');
             return;
@@ -197,6 +183,7 @@ document.getElementById('twitterButton').addEventListener('click', async functio
 
         console.log("Blobが正常に生成されました。", blob);  // デバッグ用
 
+        // BlobをImgurにアップロード
         const imageUrl = await uploadImageToImgur(blob);
         const baseColor = document.getElementById('hexColor').value;  // 現在のベースカラー
 

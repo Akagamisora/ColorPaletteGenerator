@@ -3,8 +3,8 @@ document.getElementById('saveImageButton').addEventListener('click', function() 
     savePaletteAsImage();
 });
 
-// カラーパレットを画像として出力する関数
-function savePaletteAsImage() {
+// 画像を生成する関数
+function createPaletteCanvas(callback) {
     // Canvasを作成
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -68,16 +68,12 @@ function savePaletteAsImage() {
     }
 
     // ベースカラー
-    ctx.font = '24px Arial';
     const baseColor = chroma(document.getElementById('hexColor').value);
     drawColorInfo(baseColor, xPosition, yPosition + 28);
 
     // 補色
     const complementary = baseColor.set('hsl.h', '+180');
     drawColorInfo(complementary, xPosition + xColorInfo, yPosition + 28);
-
-    // ランダム生成ボタンの背景色を補色に設定
-    document.getElementById('randomButton').style.backgroundColor = complementary.hex();
 
     // 類似配色
     const analogous = [
@@ -129,15 +125,11 @@ function savePaletteAsImage() {
 
     console.log("Canvasが正常に作成され、描画されました。");  // デバッグ用
 
-    // 画像として保存 (ページに保存する機能はそのまま)
-    const link = document.createElement('a');
-    const baseColorHex = baseColor.hex().replace('#', '');
-    link.download = `basecolor_${baseColorHex}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    // コールバック関数でBlobに変換
+    canvas.toBlob(callback);
 
     // ページに追加されたキャンバスを削除
     setTimeout(() => {
         canvas.remove();
-    }, 1000); // 画像を保存した後に1秒後に削除
+    }, 1000); // キャンバスを1秒後に削除
 }
