@@ -198,10 +198,11 @@ document.getElementById('twitterButton').addEventListener('click', async functio
         console.log("Blobが正常に生成されました。", blob);  // デバッグ用
 
         const imageUrl = await uploadImageToImgur(blob);
+        const baseColor = document.getElementById('hexColor').value;  // 現在のベースカラー
 
         if (imageUrl) {
             // Twitter投稿用のテキストとリンクを生成
-            const tweetText = `ベースカラー「${document.getElementById('hexColor').value}」を元にカラーパレットを生成しました。\n\n${imageUrl}\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/\n\n#カラーパレットジェネレーター`;
+            const tweetText = `ベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\n${imageUrl}\n\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
 
             // Twitterの共有URLを生成
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
