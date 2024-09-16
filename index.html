@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カラーパレットジェネレーター</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>
+        <span id="colorText">カラー</span>
+        <span id="paletteText">パレット</span>
+        <span id="generatorText">ジェネレーター</span>
+    </h1>
+
+    <!-- カラーピッカー -->
+    <label for="baseColor">ベースカラーを選んでください: </label>
+    <input type="color" id="baseColor" value="#e4cb67">
+
+    <!-- HEXコード表示用 -->
+    <input type="text" id="hexColor" value="#e4cb67">
+
+    <!-- ランダム生成ボタン -->
+    <button id="randomButton">ランダム生成</button>
+
+    <p>色彩理論に基づいて、カラーパレットを作成するツールです。</p>
+    <p>作成するカラーパレットは、補色、類似色、トライアド、分裂補色、テトラードの5つです。</p>
+    <ul>
+        <li>補色配色: 色相環の反対色</li>
+        <li>類似色配色: 色相環で隣り合う色</li>
+        <li>トライアド配色: 色相環で等間隔な3色</li>
+        <li>分裂補色配色: 補色の左右隣の色</li>
+        <li>テトラード配色: 90度間隔の4色</li>
+    </ul>
+
+    <div class="colorContainer">
+        <h2>生成結果</h2>
+        <div id="colorSchemes"></div>
+    </div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
