@@ -33,7 +33,7 @@ randomButton.addEventListener('click', function() {
     generateColors();  // ランダムカラーでパレット生成
 });
 
-// パレット生成関数
+// カラーピッカーまたはHEXコードの変更で呼び出されるパレット生成関数
 function generateColors() {
     let baseColor = document.getElementById('hexColor').value;
     let color = chroma(baseColor);
@@ -75,6 +75,9 @@ function generateColors() {
     paletteText.style.color = triadic[1].hex();
     generatorText.style.color = triadic[2].hex();
 
+    // ランダム生成ボタンの背景色を補色に設定
+    document.getElementById('randomButton').style.backgroundColor = complementary.hex();
+
     // 結果を表示
     let schemes = document.getElementById('colorSchemes');
     schemes.innerHTML = '';  // 既存の内容をクリア
@@ -84,9 +87,6 @@ function generateColors() {
     addColorScheme(schemes, 'トライアド配色', triadic[0], triadic[1], triadic[2]);
     addColorScheme(schemes, '分裂補色配色', splitComplementary[0], splitComplementary[1], splitComplementary[2]);
     addColorScheme(schemes, 'テトラード配色', tetradic[0], tetradic[1], tetradic[2], tetradic[3]);
-
-    // ランダム生成ボタンの背景色を補色に設定
-    document.getElementById('randomButton').style.backgroundColor = complementary.hex();
 }
 
 // 配色スキームを追加する関数
@@ -106,7 +106,7 @@ function addColorScheme(parent, title, ...colors) {
         box.className = 'color-box';
         box.style.backgroundColor = color.hex();
 
-        // カラーボックス内のテキスト
+        // カラーボックス内のテキスト（カラーコード + "クリックでコピー"）
         let colorCodeText = document.createElement('div');
         colorCodeText.className = 'color-code';
         colorCodeText.innerText = `${color.hex()} - クリックでコピー`;
@@ -125,7 +125,7 @@ function addColorScheme(parent, title, ...colors) {
     parent.appendChild(schemeContainer);
 }
 
-// ランダムにカラーを生成
+// ランダムカラー生成関数
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
