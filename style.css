@@ -106,3 +106,14 @@ button:hover {
     gap: 20px;
     margin-top: 20px;
 }
+
+#saveImageButton, #twitterButton {
+    display: inline-block;
+}
+
+/* 1024px以下の画面サイズの場合は非表示 */
+@media (max-width: 1024px) {
+    #saveImageButton, #twitterButton {
+        display: none;  /* 非表示 */
+    }
+}
