@@ -1,11 +1,35 @@
-// 画像を書き出すボタンのクリックイベント
-document.getElementById('saveImageButton').addEventListener('click', function() {
-    savePaletteAsImage();
+// Twitter共有ボタンのクリックイベント
+document.getElementById('twitterButton').addEventListener('click', async function() {
+    // カラーパレットの画像を生成
+    createPaletteCanvas(async function(blob) {
+        if (!blob) {
+            alert('キャンバスから画像を生成できませんでした。');
+            return;
+        }
+
+        console.log("Blobが正常に生成されました。", blob);  // デバッグ用
+
+        // BlobをImgurにアップロード
+        const imageUrl = await uploadImageToImgur(blob);
+        const baseColor = document.getElementById('hexColor').value;  // 現在のベースカラー
+
+        if (imageUrl) {
+            // Twitter投稿用のテキストとリンクを生成
+            const tweetText = `【カラーパレットジェネレーター】\nベースカラー「${baseColor}」を元にカラーパレットを生成しました。\n\n生成したカラーパレットの画像はここから確認できるよ👀\n${imageUrl}\n\n⬇️新たにカラーパレットを生成する⬇️\nhttps://akagamisora.github.io/ColorPaletteGenerator/?baseColor=${encodeURIComponent(baseColor)}\n\n#カラーパレットジェネレーター`;
+
+            // Twitterの共有URLを生成
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+            // 新しいタブでTwitterの共有ページを開く
+            window.open(twitterUrl, '_blank');
+        } else {
+            alert('画像のアップロードに失敗しました。');
+        }
+    });
 });
 
-// 画像を生成し、ローカルに保存する関数
-function savePaletteAsImage() {
-    // Canvasを作成
+// Twitter共有用のキャンバス生成関数
+function createPaletteCanvas(callback) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const width = 1024;
@@ -52,7 +76,6 @@ function savePaletteAsImage() {
     ctx.fillText('テトラード配色', xPosition, yPosition + 24 + yColorInfo * 4);
 
     function drawColorInfo(color, x, y) {
-        // 色を表示するボックス
         ctx.fillStyle = color.hex();
         ctx.fillRect(x, y, boxSize, boxSize);
         x += (boxSize + xSpace10);
@@ -64,15 +87,12 @@ function savePaletteAsImage() {
         ctx.fillText(`RGB: ${color.rgb()}`, x, y);
     }
 
-    // ベースカラー
     const baseColor = chroma(document.getElementById('hexColor').value);
     drawColorInfo(baseColor, xPosition, yPosition + 28);
 
-    // 補色
     const complementary = baseColor.set('hsl.h', '+180');
     drawColorInfo(complementary, xPosition + xColorInfo, yPosition + 28);
 
-    // 類似配色
     const analogous = [
         baseColor,
         baseColor.set('hsl.h', '-30'),
@@ -82,7 +102,6 @@ function savePaletteAsImage() {
         drawColorInfo(analogous[i], xPosition + xColorInfo * i, yPosition + 28 + yColorInfo);
     }
 
-    // トライアド配色
     const triadic = [
         baseColor,
         baseColor.set('hsl.h', '+120'),
@@ -93,7 +112,6 @@ function savePaletteAsImage() {
         drawColorInfo(triadic[i], xPosition + xColorInfo * i, yPosition + 28 + yColorInfo);
     }
 
-    // 分裂補色配色
     const splitComplementary = [
         baseColor,
         baseColor.set('hsl.h', '+150'),
@@ -104,7 +122,6 @@ function savePaletteAsImage() {
         drawColorInfo(splitComplementary[i], xPosition + xColorInfo * i, yPosition + 28 + yColorInfo);
     }
 
-    // テトラード配色
     const tetradic = [
         baseColor,
         baseColor.set('hsl.h', '+90'),
@@ -117,13 +134,14 @@ function savePaletteAsImage() {
     }
 
     // 最後に署名
-    ctx.textAlign = "center"
+    ctx.textAlign = "center";
     ctx.fillText('Made by Sora Akagami', width / 2, height - 50);
 
-    // 画像として保存
-    const link = document.createElement('a');
-    const baseColorHex = baseColor.hex().replace('#', '');
-    link.download = `basecolor_${baseColorHex}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    // コールバック関数でBlobに変換
+    canvas.toBlob(callback);
+
+    // ページに追加されたキャンバスを削除
+    setTimeout(() => {
+        canvas.remove();
+    }, 1000);
 }
