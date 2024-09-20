@@ -90,6 +90,42 @@ function generateColors() {
     addColorScheme(schemes, 'テトラード配色', tetradic[0], tetradic[1], tetradic[2], tetradic[3]);
 }
 
+// // 配色スキームを追加する関数
+// function addColorScheme(parent, title, ...colors) {
+//     let schemeContainer = document.createElement('div');
+//     schemeContainer.className = 'color-scheme';
+
+//     let schemeTitle = document.createElement('div');
+//     schemeTitle.className = 'color-scheme-title';
+//     schemeTitle.innerText = title;
+//     schemeContainer.appendChild(schemeTitle);
+
+//     let colorBoxContainer = document.createElement('div');
+//     colorBoxContainer.className = 'color-box-container';
+//     colors.forEach(color => {
+//         let box = document.createElement('div');
+//         box.className = 'color-box';
+//         box.style.backgroundColor = color.hex();
+
+//         // カラーボックス内のテキスト（カラーコード + "クリックでコピー"）
+//         let colorCodeText = document.createElement('div');
+//         colorCodeText.className = 'color-code';
+//         colorCodeText.innerText = `${color.hex()} - クリックでコピー`;
+//         box.appendChild(colorCodeText);
+
+//         // クリック時にカラーコードをクリップボードにコピー
+//         box.addEventListener('click', function() {
+//             copyToClipboard(color.hex());
+//             alert(`${color.hex()} をコピーしました！`);
+//         });
+
+//         colorBoxContainer.appendChild(box);
+//     });
+
+//     schemeContainer.appendChild(colorBoxContainer);
+//     parent.appendChild(schemeContainer);
+// }
+
 // 配色スキームを追加する関数
 function addColorScheme(parent, title, ...colors) {
     let schemeContainer = document.createElement('div');
@@ -116,7 +152,7 @@ function addColorScheme(parent, title, ...colors) {
         // クリック時にカラーコードをクリップボードにコピー
         box.addEventListener('click', function() {
             copyToClipboard(color.hex());
-            alert(`${color.hex()} をコピーしました！`);
+            showCopyNotification(`${color.hex()} をコピーしました！`);
         });
 
         colorBoxContainer.appendChild(box);
@@ -125,6 +161,79 @@ function addColorScheme(parent, title, ...colors) {
     schemeContainer.appendChild(colorBoxContainer);
     parent.appendChild(schemeContainer);
 }
+
+// クリップボードにコピーしたときに通知を表示する関数
+function showCopyNotification(message) {
+    let notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerText = message;
+    document.body.appendChild(notification);
+
+    // フェードイン
+    setTimeout(() => {
+        notification.style.opacity = '1';
+    }, 10);
+
+    // 1秒後にフェードアウト
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        // フェードアウト後にDOMから削除
+        setTimeout(() => {
+            notification.remove();
+        }, 1000);
+    }, 1000);
+}
+
+// CSS
+const style = document.createElement('style');
+style.textContent = `
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        z-index: 1000;
+    }
+
+    .color-scheme {
+        margin-bottom: 20px;
+    }
+
+    .color-scheme-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .color-box-container {
+        display: flex;
+    }
+
+    .color-box {
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .color-code {
+        font-size: 12px;
+        text-align: center;
+        margin-top: 5px;
+    }
+`;
+document.head.appendChild(style);
 
 // ランダムカラー生成関数
 function getRandomColor() {
